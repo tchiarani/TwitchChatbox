@@ -4,7 +4,7 @@
 <head>
     <meta name="viewport">
     <meta http-equiv="X-UA-Compatible" content="ie-edge" charset="utf-8">
-    <title>Chat - ${channel}</title>
+    <title>${pageTitle}</title>
     <link href="css/main.css" type="text/css" rel="stylesheet">
     <link rel="icon" href="https://static.twitchcdn.net/assets/favicon-75270f9df2b07174c23c.ico" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
@@ -29,6 +29,9 @@
         }
 
         const channel = getUrlVars()["user"];
+
+        if (channel) const pageTitle = "Chat - " + channel;
+        else const pageTitle = "Chat";
 
         const people = {};
         let twitchBadges, streamBadges, isMeCommand;
@@ -94,9 +97,17 @@
 
         const log = document.getElementById('log');
 
-        if (options.options.debug) {
+        if (channel) {
             addMessage(
                 "Le chat de @" + channel + " va s'afficher",
+                "UniiKorn",
+                "#1E90FF",
+                "https://static-cdn.jtvnw.net/jtv_user_pictures/70dc7e58-f7b2-4dd5-a2e1-58680edf1b30-profile_image-70x70.png",
+                ""
+            );
+        } else {
+            addMessage(
+                "Veuillez rajouter '/?user=' suivi de l'utilisateur Twitch",
                 "UniiKorn",
                 "#1E90FF",
                 "https://static-cdn.jtvnw.net/jtv_user_pictures/70dc7e58-f7b2-4dd5-a2e1-58680edf1b30-profile_image-70x70.png",
