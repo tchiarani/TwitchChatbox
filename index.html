@@ -42,7 +42,7 @@
 
         let options = {
             options: {
-                debug: true
+                debug: false
             },
             connection: {
                 reconnect: true,
@@ -54,7 +54,7 @@
         const client = new TwitchJS.client(options);
 
         client.on('message', (channel, user, message, self) => {
-            console.log(user);
+            //console.log(user);
 
             if (user['message-type'] === "action") {
                 isMeCommand = true;
