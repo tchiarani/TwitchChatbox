@@ -13,33 +13,62 @@
 </head>
 
 <body>
+
     <div class="wrapper">
         <div id="log"></div>
     </div>
 
-
     <script>
+        // Récupérer du streamer depuis l'URL
         function getUrlVars() {
-            var vars = {};
-            var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
-                vars[key] = value;
+            var users;
+            var parts = window.location.search.replace(/[?&]+([^?&]+)/gi, function(m, value) {
+                users = value;
             });
-            return vars;
+            return users;
         }
 
-        const channel = getUrlVars()["user"];
+        var channel = getUrlVars();
 
-        document.title = "Chat";
-        if (channel) {
-            document.title = "Chat - " + channel;
-        }
+        // Récupérer de l'affichage du pseudo (display-name)
+        getUser('login', channel).then(data => {
+            document.title = "Chat";
+            if (channel) {
+                document.title = "Chat - " + data.display_name;
+            }
+            firstMessage(data.display_name);
+        })
 
         const people = {};
         let twitchBadges, streamBadges, isMeCommand;
         let rateLimited = false;
 
+        const log = document.getElementById('log');
+
+        // Envoyer le premier message pour annoncer le chat choisi ou comment choisir le chat à afficher
+        function firstMessage(utilisateur) {
+            if (channel) {
+                addMessage(
+                    "Le chat de @" + utilisateur + " va s'afficher",
+                    "UniiKorn",
+                    "#1E90FF",
+                    "https://static-cdn.jtvnw.net/jtv_user_pictures/70dc7e58-f7b2-4dd5-a2e1-58680edf1b30-profile_image-70x70.png",
+                    ""
+                );
+            } else {
+                addMessage(
+                    "Veuillez ajouter <b>?<i>username</i></b> dans le lien ",
+                    "UniiKorn",
+                    "#1E90FF",
+                    "https://static-cdn.jtvnw.net/jtv_user_pictures/70dc7e58-f7b2-4dd5-a2e1-58680edf1b30-profile_image-70x70.png",
+                    ""
+                );
+            }
+        }
+
         const TwitchJS = window.TwitchJS;
 
+        // Options du TwitchJS.client
         let options = {
             options: {
                 debug: false
@@ -48,13 +77,13 @@
                 reconnect: true,
                 secure: true
             },
-            channels: [channel]
+            channels: [getUrlVars()]
         };
 
         const client = new TwitchJS.client(options);
 
+        // NOUVEAU MESSAGE -> AFFICHER LE MESSAGE
         client.on('message', (channel, user, message, self) => {
-            //console.log(user);
 
             if (user['message-type'] === "action") {
                 isMeCommand = true;
@@ -79,6 +108,7 @@
 
         })
 
+        // NOUVEAU TIMEOUT -> SUPPRIMER LES MESSAGES DE L'UTILISATEUR TIMEOUT
         client.on('timeout', (channel, username, reason, duration) => {
             let msgToRemove = document.querySelectorAll(`[data-name='${username}']`);
             msgToRemove.forEach(msg => {
@@ -87,6 +117,7 @@
             })
         })
 
+        // NOUVEAU BAN -> SUPPRIMER LES MESSAGES DE L'UTILISATEUR BANNI
         client.on('ban', (channel, username, reason) => {
             let msgToRemove = document.querySelectorAll(`[data-name='${username}']`);
             msgToRemove.forEach(msg => {
@@ -95,26 +126,8 @@
             })
         })
 
-        const log = document.getElementById('log');
 
-        if (channel) {
-            addMessage(
-                "Le chat de @" + channel + " va s'afficher",
-                "UniiKorn",
-                "#1E90FF",
-                "https://static-cdn.jtvnw.net/jtv_user_pictures/70dc7e58-f7b2-4dd5-a2e1-58680edf1b30-profile_image-70x70.png",
-                ""
-            );
-        } else {
-            addMessage(
-                "Veuillez rajouter dans le lien <b>?user=<i>TwitchUsername</i></b>",
-                "UniiKorn",
-                "#1E90FF",
-                "https://static-cdn.jtvnw.net/jtv_user_pictures/70dc7e58-f7b2-4dd5-a2e1-58680edf1b30-profile_image-70x70.png",
-                ""
-            );
-        }
-
+        // AFFICHER UN MESSAGE
         function addMessage(message, name, color, url, badges) {
 
             const msg = document.createElement('div');
@@ -140,6 +153,7 @@
 
             const badgeSpan = document.createElement('span');
 
+            // Si l'utilsateur possède un/des badge(s)
             if (badges) {
                 badges.forEach(badge => {
                     let b = document.createElement('img');
@@ -182,8 +196,7 @@
                     let text = document.createElement("span");
                     text.className = "message";
                     text.innerHTML = message.substr(0, matched.index);
-                    // text.style.color = 'white';
-                    if (isMeCommand) {
+                    if (isMeCommand) { // Si /me
                         text.style.color = color;
                     }
                     msg.appendChild(text);
@@ -220,6 +233,7 @@
 
         }
 
+        // TRANSFORMER LE TEXTE DES EMOTES EN EMOTES
         function formatEmotes(text, emotes) {
             var splitText = text.split('');
             for (var i in emotes) {
@@ -244,6 +258,7 @@
             return splitText.join('');
         }
 
+        // RÉCUPÉRER LES INFORMATIONS D'UN UTILISATEUR
         async function getUser(type, user) {
             return new Promise((res, rej) => {
                 request('GET', `https://api.twitch.tv/helix/users?${type}=${user}`, {
@@ -261,6 +276,7 @@
             })
         }
 
+        // RÉCUPÉRER LES BADGES OFFICIELS TWITCH
         async function getTwitchBadges() {
             return new Promise((res, rej) => {
                 request('GET', 'https://badges.twitch.tv/v1/badges/global/display?language=en').then(response => {
@@ -271,6 +287,7 @@
             })
         }
 
+        // RÉCUPÉRER LES BADGES CUSTOM DE LA CHAINE TWITCH
         async function getStreamBadges(userid) {
             return new Promise((res, rej) => {
                 request('GET', `https://badges.twitch.tv/v1/badges/channels/${userid}/display?language=en`).then(response => {
@@ -281,6 +298,7 @@
             })
         }
 
+        // TRANSORMER LES BADGES EN IMAGES
         function parseBadges(badges) {
             let result = [];
             for (let i = 0; i < badges.length; i++) {
@@ -303,6 +321,7 @@
             return result;
         }
 
+        // CALCULER LA LUMINOSITÉ, POUR DÉFINIR LA COULEUR DE POLICE (Blanc ou Noir)
         function brightnessFromHex(color) {
             var color = "" + color,
                 isHEX = color.indexOf("#") == 0;
@@ -324,14 +343,15 @@
                 matched: true,
                 index: result.index,
                 target: result[0]
-            };
+            }
             else match = {
                 matched: false
-            };
+            }
 
             return match;
         }
 
+        // SAVOIR OU PLACER LES EMOTES DANS LE MESSAGES
         function spiceMessage(message, emotes) {
             let spliced = [];
             emotes.forEach(emote => {
