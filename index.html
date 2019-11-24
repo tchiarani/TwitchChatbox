@@ -30,8 +30,8 @@
 
         const channel = getUrlVars()["user"];
 
-        if (channel) const pageTitle = "Chat - " + channel;
-        else const pageTitle = "Chat";
+        let pageTitle = "Chat";
+        if (channel) pageTitle = "Chat - " + channel;
 
         const people = {};
         let twitchBadges, streamBadges, isMeCommand;
