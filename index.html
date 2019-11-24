@@ -31,8 +31,10 @@
         const channel = getUrlVars()["user"];
 
         let pageTitle = "Chat";
+        document.title = "Chat";
         if (channel) {
             pageTitle = "Chat - " + channel;
+            document.title = "Chat - " + channel;
         }
 
         const people = {};
