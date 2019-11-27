@@ -9,9 +9,10 @@ body {
 .wrapper {
     position: absolute;
     bottom: 0;
-    right: 0;
+    left: 0;
     overflow: hidden;
-    width: 100%;
+    /*width: 100%;*/
+    width: 25vw;
 }
 
 .logmsg {
@@ -23,11 +24,11 @@ body {
 
 .msg-box {
     display: table;
-    border-radius: 50px;
-    background: #22222290;
-    padding: 20px 15px 20px 20px;
-    margin-left: 38px;
-
+    border-radius: 25px;
+    background: #222222aa;
+    /*padding: 20px 15px 20px 20px;*/
+    padding: 10px 8px 10px 10px;
+    margin-left: 15px;
     animation: bounceInUp 1.5s ease, bounceOutLeft 1s ease 60s forwards;
     -webkit-animation: bounceInUp 1.5s ease, bounceOutLeft 1s ease 60s forwards;
 }
@@ -35,46 +36,54 @@ body {
 .name-box {
     display: table;
     border-radius: 50px;
-    padding: 10px 20px 10px 62px;
-    margin: 0px 0px 0px -40px;
+    /*padding: 10px 20px 10px 62px;*/
+    padding: 5px 10px 5px 32px;
+    /*margin: 0px 0px 0px -40px;*/
+    margin: 0 0 0 -20px;
     z-index: 1;
-    font-size: 30px;
+    /*font-size: 30px;*/
+    font-size: 15px;
     font-style: italic;
     color: white;
     background: #111111;
     position: relative;
-    top: 10px;
-
+    top: 5px;
     animation: bounceInUp 1.5s ease, bounceOutLeft 1s ease 60s forwards;
     -webkit-animation: bounceInUp 1.5s ease, bounceOutLeft 1s ease 60s forwards;
 }
 
 .message {
     color: white;
-    font-size: 40px;
+    /*font-size: 40px;*/
+    font-size: 16px;
     word-break: break-word;
 }
 
 .profile-pic {
-    width: 60px;
-    height: 60px;
+    /*width: 60px;
+    height: 60px;*/
+    height: 30px;
     border-radius: 50px;
     position: relative;
-    top: 11px;
-    left: 18px;
+    /*top: 11px;*/
+    top: 5px;
+    /*left: 18px;*/
+    left: 9px;
     z-index: 2;
-
     animation: bounceInUp 1.5s ease, tada 2s ease, bounceOutLeft 1s ease 60s forwards;
     -webkit-animation: bounceInUp 1.5s ease, tada 2s ease, bounceOutLeft 1s ease 60s forwards;
 }
 
 .badge {
-    width: 30px;
-    height: 30px;
+    /*width: 30px;
+    height: 30px;*/
+    height: 15px;
     border-radius: 50px;
     position: relative;
-    top: 5px;
-    margin-right: 5px;
+    top: 3px;
+    /*margin-right: 5px;*/
+    margin-left: 1px;
+    margin-right: 3px;
     z-index: 1;
 }
 
@@ -83,29 +92,31 @@ body {
     flex-direction: row;
     z-index: 2;
     position: relative;
-    /* position:fixed; pour mettre à droite*/
+    /*position:fixed; pour mettre à droite*/
     right: 0px;
-
     animation: bounceInUp 1.5s ease, bounceOutLeft 1s ease 60s forwards;
     -webkit-animation: bounceInUp 1.5s ease, bounceOutLeft 1s ease 60s forwards;
 }
 
 .mentioned {
-    font-size: 38px;
+    /*font-size: 38px;*/
     background: #44444490;
     color: white;
     border-radius: 50px;
-    padding: 0px 10px 5px 10px;
-    margin: 0px 5px;
+    /*padding: 0px 10px 5px 10px;*/
+    padding: 0px 6px 1px 5px;
+    /*margin: 0px 5px;*/
+    margin: 0 0px;
     position: relative;
-    top: -2px;
+    top: 0px;
     animation: jackInTheBox 1s ease;
     animation-delay: 0.8s;
 }
 
 .emoticon {
     position: relative;
-    top: 10px;
+    top: 4px;
+    height: 20px;
 }
 
 .remove-msg {
